@@ -3,10 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <getopt.h>
-#include "utils.h"
-#include "filewriter.h"
 
-#define VERSION "0.0.0"
+#define VERSION "0.0.1"
 
 void show_version() {
     printf("TP1 Version: %s\n", VERSION);
@@ -20,7 +18,7 @@ void show_help() {
     printf("Usage:\n");
     printf("\tautocel -h\n");
     printf("\tautocel -V\n");
-    printf("\tautocel R N\n");
+    printf("\tautocel R N inputfile [-o outputprefix]\n");
     printf("Options\n");
     printf("\t-h --help\tImprime este mensaje.\n");
     printf("\t-V --version\tDa la versión del programa.\n");
@@ -40,6 +38,7 @@ int main(int argc, char *argv[]) {
     int version = 0;
     int help = 0;
     int must_return = 0;
+    char *prefix = NULL;
 
     static struct option long_options[] = {
         {"version", no_argument, 0, 'V'},
@@ -63,7 +62,8 @@ int main(int argc, char *argv[]) {
                 must_return = 1;
                 break;
             case 'o':
-                prefix = optarg;
+                prefix = calloc( strlen(optarg), sizeof(char));
+                strncpy(prefix, optarg, strlen(optarg));
                 break;
             case '?':
                 must_return = 1;
@@ -75,8 +75,11 @@ int main(int argc, char *argv[]) {
     }
 
     if (must_return) {
+        free(prefix);
         return EXIT_FAILURE;
     }
 
+    
+    free(prefix);
     return EXIT_SUCCESS;
 }
