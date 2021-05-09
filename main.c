@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     int version = 0;
     int help = 0;
     int must_return = 0;
-    char *prefix = NULL;
+    char prefix[20];
 
     static struct option long_options[] = {
         {"version", no_argument, 0, 'V'},
@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
                 must_return = 1;
                 break;
             case 'o':
-                prefix = calloc( strlen(optarg), sizeof(char));
                 strncpy(prefix, optarg, strlen(optarg));
                 break;
             case '?':
@@ -75,11 +74,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (must_return) {
-        free(prefix);
         return EXIT_FAILURE;
     }
 
     
-    free(prefix);
     return EXIT_SUCCESS;
 }
