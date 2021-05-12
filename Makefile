@@ -4,11 +4,15 @@ OBJS= tp1
 
 all: tp1 tp1_mips
 
-tp1_mips:main.c
+tp1_mips: main.c
 	gcc -g $^ -o $@ 
 
 tp1: main.c 
 	gcc -g $^ -o $@
 
+run_test: tp1
+	./tp1 30 8 test/firstTest
+
+.PHONY : clean
 clean:
 	rm tp1*
