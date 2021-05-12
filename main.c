@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <math.h>
 
 #define VERSION "0.0.1"
 
@@ -33,10 +35,65 @@ void show_help() {
     printf("\tel prefijo será el nombre del archivo de entrada.\n");
 }
 
+int binaryToDecimal(unsigned char *binaryChain, int length) {
+  int decimal = 0;
+  int multiplier = 1;
+  char actual_character;
+  for (int i = length - 1; i >= 0; i--) {
+    actual_character = binaryChain[i];
+    if (actual_character + '0' == '1') {
+      decimal += multiplier;
+    }
+    multiplier = multiplier * 2;
+  }
+  return decimal;
+}
+
+/*Devuelve el valor que va tener la celda[i + 1, j] */
+unsigned char proximo(unsigned char *a, unsigned int i, unsigned int j, unsigned char regla, unsigned int N) {
+    unsigned char left_neighbour = a[(i * N) + N -1];
+    unsigned char right_neighbour = a[(i * N) + 0];
+    //obtener vecino izq y derecho;
+    if (j > 0) {
+        left_neighbour =  a[(i * N) + j - 1];
+    } 
+    if (j < N - 1) {
+        right_neighbour = a[(i * N) + j + 1];
+    }
+    unsigned char binary_position[3] = {left_neighbour, a[i, j], right_neighbour};
+    int pos = binaryToDecimal(binary_position, 3);
+    /* printf("La pos para el string: %s es: %d\n", binary_position, pos); */
+    unsigned char cellValue = (regla >> pos) && 1;
+    return cellValue;
+}
+
+int readFile(unsigned char* matriz, char * fileName, int N) {
+    int ret = 1;
+    FILE *fp = fopen(fileName, "rb");
+    unsigned char buffer;
+    int counter = 0;
+    if (fp != NULL) {
+        while (fread(&buffer, sizeof(char), 1, fp) && counter < N) {
+            if (buffer != '1' & buffer != '0') {
+                break;
+            } 
+            matriz[counter] = buffer - '0';
+            counter++;      
+        }
+        if (feof(fp) && counter == N) {
+            ret = 0;
+        } else {
+            fprintf(stderr, "El archivo no contiene %d celdas\n", N);
+        }
+        fclose(fp);
+    } else {
+        fprintf(stderr, "No se pudo abrir el archivo %s celdas\n", fileName);
+    }
+    return ret;
+}
+
 int main(int argc, char *argv[]) {
     int option = 0;
-    int version = 0;
-    int help = 0;
     int must_return = 0;
     char prefix[20];
 
@@ -76,7 +133,18 @@ int main(int argc, char *argv[]) {
     if (must_return) {
         return EXIT_FAILURE;
     }
-
-    
+    char regla = (char) atoi(argv[1]);
+    int N = atoi(argv[2]);
+    unsigned char *matriz = calloc( N * N, sizeof(unsigned char));
+    if (readFile(matriz, argv[3], N) == 0) {
+        for(int i = 0; i < N - 1; ++i) {
+            for(int j = 0; j < N; ++j) {
+                printf("%u", matriz[(i * N) + j]);
+                matriz[((i + 1) * N) + j] = proximo(matriz, i, j, regla, N);
+            }
+            printf("\n");
+        }   
+    }
+    free(matriz);   
     return EXIT_SUCCESS;
 }
