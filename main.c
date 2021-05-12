@@ -35,20 +35,6 @@ void show_help() {
     printf("\tel prefijo será el nombre del archivo de entrada.\n");
 }
 
-int binaryToDecimal(unsigned char *binaryChain, int length) {
-  int decimal = 0;
-  int multiplier = 1;
-  char actual_character;
-  for (int i = length - 1; i >= 0; i--) {
-    actual_character = binaryChain[i];
-    if (actual_character + '0' == '1') {
-      decimal += multiplier;
-    }
-    multiplier = multiplier * 2;
-  }
-  return decimal;
-}
-
 /*Devuelve el valor que va tener la celda[i + 1, j] */
 unsigned char proximo(unsigned char *a, unsigned int i, unsigned int j, unsigned char regla, unsigned int N) {
     unsigned char left_neighbour = a[(i * N) + N -1];
@@ -60,11 +46,8 @@ unsigned char proximo(unsigned char *a, unsigned int i, unsigned int j, unsigned
     if (j < N - 1) {
         right_neighbour = a[(i * N) + j + 1];
     }
-    unsigned char binary_position[3] = {left_neighbour, a[i, j], right_neighbour};
-    int pos = binaryToDecimal(binary_position, 3);
-    /* printf("La pos para el string: %s es: %d\n", binary_position, pos); */
-    unsigned char cellValue = (regla >> pos) && 1;
-    return cellValue;
+    unsigned char binary_position = ((left_neighbour << 2) | a[i, j] << 1 | right_neighbour);
+    return (regla >> (int)binary_position) & 1;;
 }
 
 int readFile(unsigned char* matriz, char * fileName, int N) {
