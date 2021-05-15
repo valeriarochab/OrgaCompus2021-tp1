@@ -11,7 +11,7 @@ tp1: main.c pbmWriter.c
 	gcc -g $^ -o $@
 
 run_test: tp1
-	./tp1 30 80 test/firstTest output
+	./tp1 126 80 test/firstTest output
 
 .PHONY : clean
 clean:

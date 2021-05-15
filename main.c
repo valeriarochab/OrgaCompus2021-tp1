@@ -46,8 +46,8 @@ unsigned char proximo(unsigned char *a, unsigned int i, unsigned int j, unsigned
     if (j < N - 1) {
         right_neighbour = a[(i * N) + j + 1];
     }
-    unsigned char binary_position = ((left_neighbour << 2) | a[i, j] << 1 | right_neighbour);
-    return (regla >> (int)binary_position) & 1;;
+    unsigned char binary_position = ((left_neighbour << 2) | a[(i * N) + j] << 1 | right_neighbour);
+    return (regla >> (int)binary_position) & 1;
 }
 
 int readFile(unsigned char* matriz, char * fileName, int N) {
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     if (must_return) {
         return EXIT_FAILURE;
     }
-    char regla = (char) atoi(argv[1]);
+    int rule = (unsigned char) atoi(argv[1]);
     int N = atoi(argv[2]);
 
     pbmwriter_t pbmWriter;
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
             for(int j = 0; j < N; ++j) {
                 printf("%u", matriz[(i * N) + j]);
                 if (i != N-1) {
-                    matriz[((i + 1) * N) + j] = proximo(matriz, i, j, regla, N);
+                    matriz[((i + 1) * N) + j] = proximo(matriz, i, j, rule, N);
                 }   
             }
             pbmWriter_write(&pbmWriter, &matriz[i * N], N);
