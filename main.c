@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <math.h>
+#include "pbmWriter.h"
 
 #define VERSION "0.0.1"
 
@@ -118,16 +118,23 @@ int main(int argc, char *argv[]) {
     }
     char regla = (char) atoi(argv[1]);
     int N = atoi(argv[2]);
+
+    pbmwriter_t pbmWriter;
+    pbmWriter_create(&pbmWriter, argv[4], N);
+
     unsigned char *matriz = calloc( N * N, sizeof(unsigned char));
     if (readFile(matriz, argv[3], N) == 0) {
         for(int i = 0; i < N - 1; ++i) {
             for(int j = 0; j < N; ++j) {
-                printf("%u", matriz[(i * N) + j]);
+                /*printf("%u", matriz[(i * N) + j]);*/
                 matriz[((i + 1) * N) + j] = proximo(matriz, i, j, regla, N);
             }
-            printf("\n");
-        }   
+            pbmWriter_write(&pbmWriter, &matriz[i * N], N);
+            /*printf("\n");*/
+        }
+        pbmWriter_write(&pbmWriter, &matriz[(N - 1) * N], N);
     }
-    free(matriz);   
+    free(matriz);
+    pbmwriter_destroy(&pbmWriter);
     return EXIT_SUCCESS;
 }

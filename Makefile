@@ -7,11 +7,11 @@ all: tp1 tp1_mips
 tp1_mips: main.c
 	gcc -g $^ -o $@ 
 
-tp1: main.c 
+tp1: main.c pbmWriter.c
 	gcc -g $^ -o $@
 
 run_test: tp1
-	./tp1 30 8 test/firstTest
+	./tp1 30 8 test/firstTest output
 
 .PHONY : clean
 clean:
