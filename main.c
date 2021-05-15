@@ -127,7 +127,9 @@ int main(int argc, char *argv[]) {
         for(int i = 0; i < N; ++i) {
             for(int j = 0; j < N; ++j) {
                 printf("%u", matriz[(i * N) + j]);
-                matriz[((i + 1) * N) + j] = proximo(matriz, i, j, regla, N);
+                if (i != N-1) {
+                    matriz[((i + 1) * N) + j] = proximo(matriz, i, j, regla, N);
+                }   
             }
             pbmWriter_write(&pbmWriter, &matriz[i * N], N);
             printf("\n");
