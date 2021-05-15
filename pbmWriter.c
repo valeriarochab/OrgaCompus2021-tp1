@@ -22,7 +22,16 @@ int pbmWriter_create(pbmwriter_t* self, char *filename, int N){
 }
 
 int pbmWriter_write(pbmwriter_t* self, unsigned char *row, int N){
-    return fwrite(&row, sizeof(char), N, self->file);
+    int counter = 0;
+    for(int i = 0; i < N; ++i) {
+        char pBit = row[i] | '0';
+        counter += fwrite(&pBit, sizeof(char), 1, self->file);
+    }
+
+    if (counter == N) {
+        fprintf(self->file, "\n");
+    }
+    return counter;
 }
 
 void pbmwriter_destroy(pbmwriter_t* self){
