@@ -7,6 +7,12 @@
 #define O_GP 4
 #define O_FP 0
 
+/* ABA Offsets */
+#define O_A0 8
+#define O_A1 12
+#define O_A2 16
+#define O_A3 20
+#define O_EXTRA 24
 
 .text
 .align 2
@@ -18,31 +24,28 @@ Devuelve el valor que va tener la celda [i + 1, j]
 
 .globl proximo
 .ent proximo
-
+/*
 	####################### STACK FRAME ######################
 
-	#	+---------------+
-	# 36	|		|	\
+	#	+---------------+	\
+	# 28	|	N	|	|	ABA ext.
+	#	+---------------+	/
+	# 24	|	a3	|	\
 	#	+---------------+	|
-	# 32	|		|	|
+	# 20	|	a2	|	|
 	#	+---------------+	|	ABA CALLER
-	# 28	|	a1	|	|
+	# 16	|	a1	|	|
 	#	+---------------+	|
-	# 24	|	a0	|	/
-	# 	+---------------+
-	# 20	|	fp	|	\
-	# 	+---------------+	|   SRA
-	# 16	|	gp	|	/
-	# 	+---------------+
-	# 12	|		|	\
-	# 	+---------------+	|
-	# 8		|		|	|
-	# 	+---------------+	|   LTA
-	# 4		|   	|	|
-	# 	+---------------+	|
-	# 0		|   	|	/
-	# 	+---------------+
-
+	# 8	|	a0	|	/
+	# 	+---------------+	\
+	# 4	|	gp	|	|
+	# 	+---------------+	|   	SRA
+	# 0	|	fp	|	|
+	#	+---------------+	/
+	
+						No LTA (not needed)
+						No ABA (leaf function)
+*/
 proximo:
 	subu sp, sp, SS
 	/* SRA */
@@ -51,13 +54,13 @@ proximo:
 
 	move fp, sp
 
-	sw a0, SS(fp)
-	sw a1, (SS + 4)(fp)
-	sw a2, (SS + 8)(fp)
+	sw a0, O_A0(fp)
+	sw a1, O_A1(fp)
+	sw a2, O_A2(fp)
 	/* promoted to 32 bit */
-	sw a3, (SS + 12)(fp)
+	sw a3, O_A3(fp)
 	
-	lw t0, (SS + 16)(fp)
+	lw t0, O_EXTRA(fp)
 	
 	/* $t1 = (N * i) */
 	mul t1, t0, a1
@@ -84,17 +87,17 @@ proximo:
 	addu t4, a0, t4
 	lbu t4, 0(t4)
 	
-	/* t0 = a3 >> (t2 << 2 | t3 << 1 | t4) */
-	/* t0 = a3 >> (t2 << 2) */
+	/* $t0 = $a3 >> ($t2 << 2 | $t3 << 1 | $t4) */
+	/* $t0 = $a3 >> ($t2 << 2) */
 	sll t2, t2, 2
 	srlv t0, a3, t2
-	/* t0 = t0 >> (t3 << 1) */
+	/* $t0 = $t0 >> ($t3 << 1) */
 	sll t3, t3, 1
 	srlv t0, t0, t3
-	/* t0 = t0 >> t4 */
+	/* $t0 = $t0 >> $t4 */
 	srlv t0, t0, t4
 	
-	/* v0 = t0 & 1 */
+	/* $v0 = $t0 & 1 */
 	andi v0, t0, 1
 	
 	/* Stack unwinding */
