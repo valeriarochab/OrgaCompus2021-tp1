@@ -13,6 +13,9 @@ tp1: main.c pbmWriter.c proximo.c
 run_test: tp1
 	./tp1 126 80 test/firstTest output
 
+run_test_mips: tp1_mips
+	./tp1_mips 126 80 test/firstTest output
+
 .PHONY : clean
 clean:
 	rm tp1*

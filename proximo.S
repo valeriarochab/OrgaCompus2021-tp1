@@ -1,4 +1,4 @@
-#include <sys/regdef.h>
+#include <regdef.h>
 
 /* Stack size */
 #define SS 8
