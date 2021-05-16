@@ -7,7 +7,7 @@ all: tp1 tp1_mips
 tp1_mips: main.c proximo.S pbmWriter.c
 	gcc -g $^ -o $@ 
 
-tp1: main.c pbmWriter.c
+tp1: main.c pbmWriter.c proximo.c
 	gcc -g $^ -o $@
 
 run_test: tp1
