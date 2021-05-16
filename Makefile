@@ -4,7 +4,7 @@ OBJS= tp1
 
 all: tp1 tp1_mips
 
-tp1_mips: main.c
+tp1_mips: main.c proximo.S pbmWriter.c
 	gcc -g $^ -o $@ 
 
 tp1: main.c pbmWriter.c
