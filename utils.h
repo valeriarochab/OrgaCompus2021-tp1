@@ -7,7 +7,7 @@ void show_error(char *msg);
 
 void show_help();
 
-int readFile(unsigned char* matriz, char * fileName, unsigned int N);
+int read_file(unsigned char* matriz, char * fileName, unsigned int N);
 
 
 #endif //UTILS_H

@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define VERSION "0.0.1"
 
@@ -9,7 +10,7 @@ void show_version() {
 }
 
 void show_error(char *msg) {
-    fprintf(stderr, "%s", msg);
+    fprintf(stderr, "%s\n", msg);
 }
 
 void show_help() {
@@ -32,15 +33,15 @@ void show_help() {
 }
 
 
-int readFile(unsigned char* matriz, char * fileName, unsigned int N) {
+int read_file(unsigned char* matriz, char * fileName, unsigned int N) {
     int ret = EXIT_FAILURE;
     FILE *fp = fopen(fileName, "rb");
-    if (fp != NULL) {
+    if (is_valid_file(fp)) {
         unsigned char buffer;
         int counter = 0;
         while (fread(&buffer, sizeof(char), 1, fp) && counter < N) {
             if (buffer != '1' & buffer != '0') {
-                fprintf(stderr, "El archivo no cumple con el formato\n");
+                show_error("El archivo no cumple con el formato");
                 return ret;
             } 
             matriz[counter] = buffer - '0';
@@ -53,7 +54,17 @@ int readFile(unsigned char* matriz, char * fileName, unsigned int N) {
         }
         fclose(fp);
     } else {
-        fprintf(stderr, "No se pudo abrir el archivo %s\n", fileName);
+        fprintf(stderr, "No se pudo abrir el archivo %s o el mismo esta vacio\n", fileName);
     }
     return ret;
+}
+
+int is_valid_file(FILE *fp) {
+    int size = 0;
+    if (fp != NULL) {
+        fseek(fp, 0, SEEK_END);
+        size = ftell(fp);
+        rewind(fp);
+    }
+    return size;
 }

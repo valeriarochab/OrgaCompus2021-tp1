@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
     int option = 0;
     int must_return = 0;
-    char prefix[20];
+    char prefix[20] = {0};
 
     static struct option long_options[] = {
         {"version", no_argument, 0, 'V'},
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     int long_index = 0;
     while ((option = getopt_long(argc, argv, "Vho:", long_options, &long_index)) != -1) {
         if (must_return) {
-            show_error("Invalid parameters.");
+            show_error("Parametros invalidos");
             return 1;
         }
 
@@ -52,25 +52,25 @@ int main(int argc, char *argv[]) {
     }
     unsigned char rule;
     unsigned long N;
-    char *inputFileName = NULL;
+    char *input_filename = NULL;
     if (optind + 3 == argc) {
-        int ruleAux = atoi(argv[optind++]);
+        int rule_aux = atoi(argv[optind++]);
         N = atoi(argv[optind++]);
-        inputFileName = argv[optind++];
-        if ((ruleAux > 255 || ruleAux < 0) || (N > UINT_MAX || N < 3)) {
-            show_error("Invalid parameters.");
+        input_filename = argv[optind++];
+        if ((rule_aux > 255 || rule_aux < 0) || (N > UINT_MAX || N < 3)) {
+            show_error("Parametros invalidos");
             return EXIT_FAILURE;
         }    
-        rule = (unsigned char) ruleAux;
+        rule = (unsigned char) rule_aux;
     } else {
         return EXIT_FAILURE;
     }
 
-    pbmwriter_t pbmWriter;
-    pbmWriter_create(&pbmWriter, prefix, N);
+    pbmwriter_t pbm_writer;
+    pbmWriter_create(&pbm_writer, strlen(prefix) > 0 ? prefix : input_filename, N);
 
     unsigned char *matriz = calloc( N * N, sizeof(unsigned char));
-    if (readFile(matriz, inputFileName, N) == 0) {
+    if (read_file(matriz, input_filename, N) == 0) {
         for(int i = 0; i < N; ++i) {
             for(int j = 0; j < N; ++j) {
                 printf("%u", matriz[(i * N) + j]);
@@ -78,11 +78,11 @@ int main(int argc, char *argv[]) {
                     matriz[((i + 1) * N) + j] = proximo(matriz, i, j, rule, N);
                 }   
             }
-            pbmWriter_write(&pbmWriter, &matriz[i * N], N);
+            pbmWriter_write(&pbm_writer, &matriz[i * N], N);
             printf("\n");
         }
     }
     free(matriz);
-    pbmwriter_destroy(&pbmWriter);
+    pbmwriter_destroy(&pbm_writer);
     return EXIT_SUCCESS;
 }
