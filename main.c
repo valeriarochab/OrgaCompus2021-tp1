@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
     int option = 0;
     int must_return = 0;
-    char prefix[20] = {0};
+    char prefix[50] = {0};
 
     static struct option long_options[] = {
         {"version", no_argument, 0, 'V'},
