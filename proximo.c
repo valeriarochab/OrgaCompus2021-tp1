@@ -1,3 +1,5 @@
+#include "proximo.h"
+
 /*Devuelve el valor que va tener la celda[i + 1, j] */
 unsigned char proximo(unsigned char *a, unsigned int i, unsigned int j, unsigned char regla, unsigned int N) {
     unsigned char left_neighbour = a[(i * N) + N -1];
