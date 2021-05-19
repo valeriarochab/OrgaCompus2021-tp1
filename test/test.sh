@@ -11,11 +11,11 @@ echo " "
 echo "Test 1: 30 rule, 80 iterations: "
 ../autcel 30 80 inicial_30_80 -o evolucion_test_1
 
-echo "Test 2: 30 rule, 110 iterations: "
-../autcel 30 110 inicial_30_110 -o evolucion_test_2
+echo "Test 2: 110 rule, 80 iterations: "
+../autcel 110 80 inicial_110_80 -o evolucion_test_2
 
-echo "Test 3: 30 rule, 126 iterations: "
-../autcel 30 126 inicial_30_126 -o evolucion_test_3
+echo "Test 3: 126 rule, 80 iterations: "
+../autcel 126 80 inicial_126_80 -o evolucion_test_3
 
 echo "Test 4: invalid file1: "
 ../autcel 30 80 invalid_file1 -o evolucion_test_4
