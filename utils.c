@@ -32,6 +32,16 @@ void show_help() {
     printf("\tel prefijo será el nombre del archivo de entrada.\n");
 }
 
+int is_valid_file(FILE *fp) {
+    int size = 0;
+    if (fp != NULL) {
+        fseek(fp, 0, SEEK_END);
+        size = ftell(fp);
+        rewind(fp);
+    }
+    return size;
+}
+
 
 int read_file(unsigned char* matriz, char * fileName, unsigned int N) {
     int ret = EXIT_FAILURE;
@@ -57,14 +67,4 @@ int read_file(unsigned char* matriz, char * fileName, unsigned int N) {
         fprintf(stderr, "No se pudo abrir el archivo %s o el mismo esta vacio\n", fileName);
     }
     return ret;
-}
-
-int is_valid_file(FILE *fp) {
-    int size = 0;
-    if (fp != NULL) {
-        fseek(fp, 0, SEEK_END);
-        size = ftell(fp);
-        rewind(fp);
-    }
-    return size;
 }
