@@ -7,9 +7,10 @@
 #define MAGIC_NUMBER "P1\n"
 
 int pbmWriter_create(pbmwriter_t* self, char *filename, int N){
-    self->file = fopen(filename, "w");
+    
+    self->file = fopen(strcat(filename, ".pbm"), "w");
     if (self->file == NULL) {
-        fprintf(stderr, "File %s not found\n", filename);
+        fprintf(stderr, "No se pudo crear el archivo %s\n", filename);
         return EXIT_FAILURE;
     }
     char firstRow[3] = MAGIC_NUMBER;
