@@ -5,12 +5,15 @@
 #include <string.h>
 
 #define MAGIC_NUMBER "P1\n"
+#define PBM ".pbm"
 
 int pbmWriter_create(pbmwriter_t* self, char *filename, int N){
-    
-    self->file = fopen(strcat(filename, ".pbm"), "w");
+    char *output = calloc(strlen(filename) + strlen(PBM), sizeof(char));
+    strncpy(output, filename, strlen(filename));
+    self->file = fopen(strcat(output, PBM), "w");
     if (self->file == NULL) {
-        fprintf(stderr, "No se pudo crear el archivo %s\n", filename);
+        fprintf(stderr, "No se pudo crear el archivo %s\n", output);
+        free(output);
         return EXIT_FAILURE;
     }
     char firstRow[3] = MAGIC_NUMBER;
@@ -18,6 +21,8 @@ int pbmWriter_create(pbmwriter_t* self, char *filename, int N){
     fwrite(&firstRow, sizeof(char), 3, self->file);
 
     fprintf(self->file, "%d %d\n", N, N);
+
+    free(output);
 
     return EXIT_SUCCESS;
 }
