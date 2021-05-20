@@ -1,4 +1,5 @@
 .history*
 *.o
 *.out
-tp1*
+autcel*
+.idea

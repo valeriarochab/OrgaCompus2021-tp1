@@ -1,14 +1,21 @@
 CFLAGS= -mno-mips16 -mgp32 -mfp32 -gpubnames  -mlong32 -mips1 -mabicalls -mlong-calls -mframe-header-opt -march=r2k
 
-OBJS= tp1
+OBJS= autcel
 
-all: tp1 tp1_mips
+all: autcel autcel_mips
 
-tp1_mips:main.c
+autcel_mips: main.c proximo.S pbmWriter.c utils.c
 	gcc -g $^ -o $@ 
 
-tp1: main.c 
+autcel: main.c pbmWriter.c proximo.c utils.c
 	gcc -g $^ -o $@
 
+run_test: autcel
+	./test/test.sh
+
+run_test_mips: autcel_mips
+	./test/test_mips.sh
+
+.PHONY : clean
 clean:
-	rm tp1*
+	rm autcel*
